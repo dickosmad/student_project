@@ -15,14 +15,16 @@ import FindTeacher from "./components/findTeacher/FindTeacher";
 
 
 class Root extends React.Component {
-
+// if the user 
+// create two collections (students ,teacher )
+// every when i
     componentDidMount(){
         firebase.auth().onAuthStateChanged(user =>{
 
             if(user){
                 console.log(user);
                 
-                this.props.history.push('/');
+                this.props.history.push('/usersDasbord');
                 
             }
         })
