@@ -1,0 +1,110 @@
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@1,600&display=swap");
+
+.hero-header {
+  height: 700px;
+  background-image: url(../../assets/images/08.jpg);
+
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "content  slider"
+    "content  slider"
+    "content  slider";
+}
+
+.slider {
+  grid-area: slider;
+}
+
+.content {
+  grid-area: content;
+}
+
+img {
+  vertical-align: middle;
+  border-style: none;
+  position: relative;
+  top: 50px;
+  width: 100%;
+}
+
+.content h1 {
+  font-family: "EB Garamond", serif;
+  color: white;
+  margin: 3rem 2rem;
+  padding-top: 60px;
+
+  font-size: 3rem;
+}
+
+h1 span {
+  color: #f44336;
+}
+
+.default-color {
+  background-color: #3e2538 !important;
+}
+
+.banner {
+  background: url(../../assets/images/banner_hero.png);
+}
+
+/* linear-gradient(to bottom right, #009688 15%, transparent),
+    radial-gradient(
+        circle at 100% 0%,
+        rgba(255, 255, 255, 0.2) 10%,
+        transparent 20%
+      )
+      center center / 15px 15px,
+    linear-gradient(to bottom right, #3c4bbd, #57add8); */
+
+button {
+  margin: 1em 1em;
+  display: block;
+  -webkit-appearance: none;
+  border: 6px solid rgba(255, 255, 255, 0.45);
+  border-radius: 50px;
+  padding: 1em 3em;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-clip: padding-box;
+  position: relative;
+  color: #fff;
+}
+
+button:before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  border-radius: 50px;
+  z-index: -1;
+  filter: blur(14px);
+}
+
+button:after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  border-radius: 50px;
+  z-index: -1;
+  filter: blur(14px);
+}
+
+.commencer {
+  background-image: linear-gradient(90deg, #7b81ec, #3bd1d3);
+}
+
+.commencer:before {
+  background-image: linear-gradient(90deg, #7b81ec, transparent);
+}
+
+.commencer:after {
+  background-image: linear-gradient(90deg, transparent, #3bd1d3);
+}

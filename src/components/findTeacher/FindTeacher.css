@@ -1,0 +1,117 @@
+/* general stylings */
+
+.card {
+    width: 80%;
+    margin: 0 auto;
+    flex-direction: column;
+    max-width: 900px;
+    background: #005E9B;
+    flex-basis: 250px;
+    color: white;
+    padding: 2em;
+    text-align: center;
+}
+
+
+
+.profile-info {
+    font-weight: 300;
+    opacity: .7;
+}
+
+.profile-name {
+    grid-area: name;
+    letter-spacing: 1px;
+    font-size: 2rem;
+    margin: .75em 0 0;
+    line-height: 1;
+}
+
+.profile-name::after {
+    content: '';
+    display: block;
+    width: 2em;
+    height: 1px;
+    background: #5bcbf0;
+    margin: .5em auto .65em;
+    opacity: .25;
+}
+
+.profile-position {
+    text-transform: uppercase;
+    font-size: .875rem;
+    letter-spacing: 3px;
+    margin: 0 0 .5vem;
+    line-height: 1;
+    color: #5bcbf0;
+}
+
+.profile-img {
+    justify-self: center;
+    max-width: 100%;
+    border-radius: 50%;
+    border: 2px solid white;
+    top: 10px;
+}
+
+.skills-list {
+    justify-self: right;
+    list-style: none;
+    justify-content: space-evenly;
+    display: flex;
+    width: 100%;
+    margin: .5em;
+    padding: 0;
+}
+
+.skills-link {
+    color: #5bcbf0;
+    opacity: .5;
+}
+
+
+.card {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-column-gap: 2em;
+    grid-template-areas:
+        "name"
+        "image"
+        "position"
+        "description"
+        "skills";
+}
+
+
+.profile-name {
+    grid-area: name;
+}
+
+.profile-position {
+    grid-area: position;
+}
+
+.profile-info {
+    grid-area: description;
+}
+
+.profile-img {
+    grid-area: image;
+}
+
+.skills-list {
+    grid-area: skills;
+}
+
+
+@media (min-width: 600px) {
+    .card {
+        text-align: left;
+        grid-template-columns: 1fr 3fr;
+        grid-template-areas:
+            "image name"
+            "image position"
+            "image description"
+            "image skills";
+    }
+}
