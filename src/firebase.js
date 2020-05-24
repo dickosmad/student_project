@@ -12,13 +12,6 @@ var firebaseConfig = {
     appId: process.env.REACT_APP_APP_ID,
     measurementId: process.env.REACT_APP_MEASUREMENT_ID,
     
-    // authDomain: "student-project-80105.firebaseapp.com",
-    // databaseURL: "https://student-project-80105.firebaseio.com",
-    // projectId: "student-project-80105",
-    // storageBucket: "student-project-80105.appspot.com",
-    // messagingSenderId: "773939569491",
-    // appId: "1:773939569491:web:adb4d8781cb0bdbf9fb7a6",
-    // measurementId: " G-2MR0Z1KQPY"
   };
   // Initialize Firebase
   console.log(firebaseConfig);
