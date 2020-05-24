@@ -10,6 +10,7 @@ import App from "./App";
 import firebase from './firebase';
 import Login from '../src/components/Auth/Login';
 import Register from '../src/components/Auth/Register';
+import FindTeacher from "./components/findTeacher/FindTeacher";
 
 
 
@@ -33,6 +34,7 @@ class Root extends React.Component {
             <Route exact path="/" component={App} />
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
+            <Route path="/findTeacher" component={FindTeacher} />
         </Switch>
     )
     }

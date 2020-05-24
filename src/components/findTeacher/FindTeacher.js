@@ -8,7 +8,7 @@ export default class FindTeacher extends Component {
                 <div className="card">
                     <img src="https://i.pravatar.cc/125?image=3" alt="" className="profile-img"/>
                     <div className="teacher-description">
-                    <h2 className="profile-name">Ramsey Harper</h2>
+                    <h2 className="profile-name">Moussa Issa</h2>
                     <p className="profile-position">Mathematics Professor</p> 
                     <p className="profile-info">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. 
