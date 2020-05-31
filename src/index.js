@@ -8,11 +8,19 @@ import 'semantic-ui-css/semantic.min.css'
 import "./index.css";
 import App from "./App";
 import firebase from './firebase';
+import {createStore} from 'redux';
+import { Provider, connect } from 'react-redux' ; 
+import rootReducer from './reducers/index';
+import { composeWithDevTools } from 'redux-devtools-extension'
+import { setUser ,clearUser } from './actions';
 import Login from '../src/components/Auth/Login';
 import Register from '../src/components/Auth/Register';
 import FindTeacher from "./components/findTeacher/FindTeacher";
+import userDashboard from "./components/userDashboard/userDashboard";
 
 
+
+const store = createStore(rootReducer ,composeWithDevTools() );
 
 class Root extends React.Component {
 // if the user 
@@ -23,9 +31,12 @@ class Root extends React.Component {
 
             if(user){
                 console.log(user);
+                this.props.setUser(user)
+                this.props.history.push('/userDashboard');
                 
-                this.props.history.push('/usersDasbord');
-                
+            }else {
+                this.props.clearUser()
+                this.props.history.push('/');
             }
         })
     }
@@ -37,16 +48,28 @@ class Root extends React.Component {
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
             <Route path="/findTeacher" component={FindTeacher} />
+            <Route path="/userDashboard" component={userDashboard} />
         </Switch>
     )
     }
 }
 
-const RootWithAuth = withRouter(Root)
+// const mapStateToProps = ({user}) =>{
+//     return {user:setUser}
+// }
+
+const RootWithAuth = withRouter(
+    connect(
+       null, 
+        {setUser , clearUser }
+        )(Root)
+ );
 
 
 
 ReactDOM.render( 
-<Router>
-    <RootWithAuth />
-</Router> , document.getElementById('root'));
+    <Provider store={store} >
+        <Router>
+            <RootWithAuth />
+        </Router> 
+    </Provider>, document.getElementById('root'));
