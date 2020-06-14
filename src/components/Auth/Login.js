@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import {Grid, Form, Segment,Button,Header,Message,Icon } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 import firebase from '../../firebase';
+import {connect} from 'react-redux';
+import {setUser} from '../../actions'
 
 
-export default class Login extends Component {
+ class Login extends Component {
     state = {
         email:'',
         password:'',
@@ -28,7 +30,10 @@ export default class Login extends Component {
             .auth()
             .signInWithEmailAndPassword(this.state.email , this.state.password)
             .then(signedInUser => {
+                this.props.setUser(signedInUser)
                 console.log(signedInUser);
+                this.props.history.push('/userDashboard');
+                console.log("Login -> handleSubmit -> this.props", this.props)
             })
             .catch(err =>{
                 console.error(err)
@@ -53,6 +58,7 @@ export default class Login extends Component {
     };
 
     render() {
+        console.log(this.props)
         const {email , password , errors , loading} = this.state ;
         return (
             <Grid style={{transform:'translateY(50%)'}} textAlign="center" verticalAlign="middle" className="app" >
@@ -95,3 +101,12 @@ export default class Login extends Component {
         )
     }
 }
+
+const mapStateToProps = state =>({
+    
+    user: state.user.currentUser
+  })
+  
+  export default connect(mapStateToProps,
+    {setUser}
+    )(Login)

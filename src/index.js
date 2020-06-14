@@ -26,20 +26,20 @@ class Root extends React.Component {
 // if the user 
 // create two collections (students ,teacher )
 // every when i
-    componentDidMount(){
-        firebase.auth().onAuthStateChanged(user =>{
-
-            if(user){
-                console.log(user);
-                this.props.setUser(user)
-                this.props.history.push('/userDashboard');
+    // componentDidMount(){
+    //     firebase.auth().onAuthStateChanged(user =>{
+    //         console.log('St')
+    //         if(user){
+    //             console.log(user);
+    //             this.props.setUser(user)
+    //             // this.props.history.push('/userDashboard');
                 
-            }else {
-                this.props.clearUser()
-                this.props.history.push('/');
-            }
-        })
-    }
+    //         }else {
+    //             this.props.clearUser()
+    //             this.props.history.push('/');
+    //         }
+    //     })
+    // }
     render(){ 
         return(
     
@@ -54,9 +54,7 @@ class Root extends React.Component {
     }
 }
 
-// const mapStateToProps = ({user}) =>{
-//     return {user:setUser}
-// }
+
 
 const RootWithAuth = withRouter(
     connect(

@@ -1,16 +1,34 @@
 import React, { Component } from 'react';
-import {Grid, Form, Segment,Button,Header,Message,Icon ,Checkbox } from 'semantic-ui-react';
+import {Grid, Form, Segment,Button,Header,Message,Icon ,Checkbox, Dropdown } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 import firebase from '../../firebase';
 import md5 from 'md5';
 
+const skillsOptions = [
 
+    { key: 'mathematiques', text: 'Mathematiques', value: 'Mathematiques' },
+    { key: 'Biology', text: 'Biology', value: 'Biology' },
+    { key: 'Physics', text: 'Physics', value: 'Physics' },
+    { key: 'Philosophy', text: 'Philosophy', value: 'Philosophy' },
+];
+const experienceOptions = [
+
+    { key: 1, text: '0 - 1 year', value: 1 },
+    { key: 1, text: '1 - 3 years', value: 1 },
+    { key: 1, text: '3 year +', value: 1 },
+    
+]
 export default class Register extends Component {
     state = {
         email:'',
         username:'',
         password:'',
         passwordConfirmation:'',
+        schoolName:'',
+        level:'',
+        teachingField:'',
+        experience:'',
+        showTeachearForm: false,
         errors:[],
         loading:false , 
         usersRef: firebase.database().ref('users')
@@ -19,6 +37,12 @@ export default class Register extends Component {
     handleChange = (event)=> {
         this.setState({[event.target.name]:event.target.value})
     }
+
+    toggleForm = () => {
+        this.setState({showTeachearForm: !this.state.showTeachearForm})
+    }
+
+
     isFormValid = () =>{
         let errors = [];
         let error;
@@ -49,6 +73,8 @@ export default class Register extends Component {
             return true ;
         }
     }
+    isTeacherValid = ({showTeachearForm , experience }) => showTeachearForm && experience ; 
+
     displayErrors = errors => errors.map((error,i) =><p key={i} >{error.message} </p> )
 
     handleSubmit = (e) =>{
@@ -61,9 +87,9 @@ export default class Register extends Component {
         .then(createdUser =>{
             console.log(createdUser);
             createdUser.user.updateProfile({
-                displayName: this.state.username,
-                photoURL:`http://gravatar.com/avatar/${md5(createdUser.user.email)}?d=identicon`
-                
+                displayName: this.state.showTeachearForm ? 'teachear' : 'student',
+                photoURL:`http://gravatar.com/avatar/${md5(createdUser.user.email)}?d=identicon`,
+                userType:this.state.username
             })
             .then(() =>{
                 this.setState({loading:false})
@@ -71,6 +97,7 @@ export default class Register extends Component {
             .then(() =>{
                 this.saveUser(createdUser).then(()=> {
                     console.log('User Saved');
+                    console.log('')
                 })
             })
             .catch(err => {
@@ -87,7 +114,8 @@ export default class Register extends Component {
     saveUser = (createdUser) =>{
         return this.state.usersRef.child(createdUser.user.uid).set({
             name: createdUser.user.displayName ,
-            avatar: createdUser.user.photoURL
+            avatar: createdUser.user.photoURL,
+           
         })
     }
 
@@ -97,9 +125,8 @@ export default class Register extends Component {
             ? "error"
             : ""
     }
-
     render() {
-        const {email , username , passwordConfirmation , password , errors , loading} = this.state ;
+        const {email , username , passwordConfirmation , password , errors , loading,teachingField} = this.state ;
         return (
             <Grid textAlign="center" verticalAlign="middle" style={{transform:'translateY(50%)'}} >
              <Grid.Column style={{maxWidth:450}}  >
@@ -109,6 +136,17 @@ export default class Register extends Component {
                  </Header>
                  <Form size='large' onSubmit={this.handleSubmit} >
                      <Segment stacked >
+                     <Form.Field>
+                            Are you a Teacher: <b>{this.state.value}</b>
+                        </Form.Field>
+                        <Form.Field>
+                        <Checkbox
+                            toggle
+                            label='Teacher'
+                            onChange={this.toggleForm}
+                        />
+                       
+                        </Form.Field>
                          <Form.Input fluid name="username" icon="user" iconPosition="left"
                          placeholder="Username" onChange={this.handleChange} type="text" value={username} />
 
@@ -126,25 +164,32 @@ export default class Register extends Component {
                             className={this.handleInputError(errors,'passwordConfirmation')} 
                             type="password" value={passwordConfirmation} 
                          />
-                        <Form.Field>
-                            Selected value: <b>{this.state.value}</b>
-                        </Form.Field>
-                        <Form.Field>
-                        <Checkbox
-                            radio
-                            label='Choose this'
-                            name='checkboxRadioGroup'
-                            value='this'
-                            checked={this.state.value === 'this'}
-                            onChange={this.handleChange}
-                        />
-                        </Form.Field>
-                         <Button
+                          {this.state.showTeachearForm && 
+                          <>
+                          <Form.Input fluid name="text" icon="globe" iconPosition="left"
+                          placeholder="Teaching Field" value={teachingField} 
+                          className={this.handleInputError(errors,'teachingField')} 
+                          onChange={this.handleChange} type="text" />
+
+                          <Dropdown placeholder='Skills' 
+                          fluid multiple selection 
+                          options={skillsOptions} />
+                            <br/>
+                         <Dropdown 
+                          placeholder='"Experience in Teaching"' 
+                          fluid multiple selection
+                        //   value = {experience}
+                          className={this.handleInputError(errors,'teachingField')} 
+                           options={experienceOptions} />
+                            <br/>
+                        </>
+                          }
+                        <Button
                             disabled={loading}
                             className={loading ? 'loading' : ''}
                             color="orange" 
                             fluid size="large">Submit
-                          </Button>
+                        </Button>
                      </Segment>
                  </Form>
                     {errors.length > 0 && (

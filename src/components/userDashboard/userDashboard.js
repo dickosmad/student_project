@@ -7,9 +7,11 @@ import { Image, Menu, Icon,Dropdown,Button } from 'semantic-ui-react';
  class userDashboard extends Component {
   state = { 
     activeItem: 'home',
-    user: null
-    // user: this.props.currentUser
 
+}
+
+componentWillReceiveProps(nextProps) {
+  this.setState({user:nextProps.currentUser})
 }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
@@ -20,13 +22,14 @@ import { Image, Menu, Icon,Dropdown,Button } from 'semantic-ui-react';
     .signOut()
     .then(() => {
         console.log('Sign Out');
+        this.props.history.push('/');
     })
   }
 
   render() {
        
     const { activeItem } = this.state
-    // console.log(this.props.currentUser);
+    console.log(this.props.currentUser)
 
   return (
     <>
@@ -38,10 +41,13 @@ import { Image, Menu, Icon,Dropdown,Button } from 'semantic-ui-react';
         style={{background:'linear-gradient(rgb(95, 12, 138), rgb(12, 4, 30))', fontSize:'1.2rem'  }}
         >
           <Menu.Item as='a'>
-              {/* <span>
-                <Image src={currentUser.photoURL} spaced='right' avatar />
-                  {currentUser.displayName}
-              </span> */}
+              <span style={{}} >
+              {this.props.currentUser.user && this.props.currentUser.user.displayName}
+              <Image src={this.props.currentUser.user.photoURL} spaced='right' avatar /> 
+              </span>
+              <span style={{}} >
+              
+              </span>
             
           </Menu.Item>
           <Menu.Item as='a'>
@@ -83,10 +89,10 @@ import { Image, Menu, Icon,Dropdown,Button } from 'semantic-ui-react';
   </>
       )
     }
-}
+} 
 
-// const mapStateToProps = state =>({
-//   currentUser: this.props.user.currentUser
-// })
+const mapStateToProps = state =>({
+  currentUser: state.user.currentUser
+})
 
-export default connect(null)(userDashboard)
+export default connect(mapStateToProps)(userDashboard)
