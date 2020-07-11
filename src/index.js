@@ -9,6 +9,9 @@ import "./index.css";
 import App from "./App";
 import firebase from './firebase';
 import {createStore} from 'redux';
+import { PersistGate } from 'redux-persist/integration/react'
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage'
 import { Provider, connect } from 'react-redux' ; 
 import rootReducer from './reducers/index';
 import { composeWithDevTools } from 'redux-devtools-extension'
@@ -19,8 +22,15 @@ import FindTeacher from "./components/findTeacher/FindTeacher";
 import userDashboard from "./components/userDashboard/userDashboard";
 
 
+const persistConfig = {
+    key: 'root',
+    storage,
+  }
 
-const store = createStore(rootReducer ,composeWithDevTools() );
+const persistedReducer = persistReducer(persistConfig, rootReducer)
+
+const store = createStore(persistedReducer ,composeWithDevTools() );
+let persistor = persistStore(store)
 
 class Root extends React.Component {
 // if the user 
@@ -67,7 +77,9 @@ const RootWithAuth = withRouter(
 
 ReactDOM.render( 
     <Provider store={store} >
+    <PersistGate loading={null} persistor={persistor}>
         <Router>
             <RootWithAuth />
-        </Router> 
+        </Router>
+        </PersistGate> 
     </Provider>, document.getElementById('root'));

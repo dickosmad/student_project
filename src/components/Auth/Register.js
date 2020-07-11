@@ -77,6 +77,7 @@ export default class Register extends Component {
 
     displayErrors = errors => errors.map((error,i) =><p key={i} >{error.message} </p> )
 
+
     handleSubmit = (e) =>{
         e.preventDefault();
         if(this.isFormValid()){
@@ -84,12 +85,12 @@ export default class Register extends Component {
         firebase
         .auth()
         .createUserWithEmailAndPassword(this.state.email,this.state.password)
-        .then(createdUser =>{
-            console.log(createdUser);
+        .then(createdUser => {
+            console.log(createdUser.user.uid);
             createdUser.user.updateProfile({
-                displayName: this.state.showTeachearForm ? 'teachear' : 'student',
-                photoURL:`http://gravatar.com/avatar/${md5(createdUser.user.email)}?d=identicon`,
-                userType:this.state.username
+                displayName: this.state.username,
+                photoURL:`http://gravatar.com/avatar/${md5(createdUser.user.email)}?d=identicon`
+                
             })
             .then(() =>{
                 this.setState({loading:false})
@@ -99,8 +100,7 @@ export default class Register extends Component {
                     console.log('User Saved');
                     console.log('')
                 })
-            })
-            .catch(err => {
+            }).catch(err => {
                 console.error(err);
                 this.setState({ errors: this.state.errors.concat(err) , loading:false })
             })
@@ -108,13 +108,21 @@ export default class Register extends Component {
         .catch(err =>{
             console.error(err)
             this.setState({errors:this.state.errors.concat(err), loading:false  })
+        }).then(()=>{
+            firebase.database().ref('users/').once('value', function (snapshot) {
+                console.log(snapshot.val())
+            });
         })
+        
       }
     }
     saveUser = (createdUser) =>{
         return this.state.usersRef.child(createdUser.user.uid).set({
             name: createdUser.user.displayName ,
             avatar: createdUser.user.photoURL,
+            roles :  ['student'],
+            skills : 'skills',
+            teachingExperience : 'teaching'
            
         })
     }
@@ -126,7 +134,7 @@ export default class Register extends Component {
             : ""
     }
     render() {
-        const {email , username , passwordConfirmation , password , errors , loading,teachingField} = this.state ;
+        const {email , username , passwordConfirmation , password , errors , loading,teachingField,experience} = this.state ;
         return (
             <Grid textAlign="center" verticalAlign="middle" style={{transform:'translateY(50%)'}} >
              <Grid.Column style={{maxWidth:450}}  >
@@ -166,24 +174,25 @@ export default class Register extends Component {
                          />
                           {this.state.showTeachearForm && 
                           <>
-                          <Form.Input fluid name="text" icon="globe" iconPosition="left"
-                          placeholder="Teaching Field" value={teachingField} 
-                          className={this.handleInputError(errors,'teachingField')} 
-                          onChange={this.handleChange} type="text" />
+             
+                            <Form.Input fluid name="text" icon="globe" iconPosition="left"
+                              placeholder="Teaching Field" value={teachingField} 
+                              className={this.handleInputError(errors,'teachingField')} 
+                            onChange={this.handleChange} type="text" />
 
-                          <Dropdown placeholder='Skills' 
-                          fluid multiple selection 
-                          options={skillsOptions} />
-                            <br/>
-                         <Dropdown 
-                          placeholder='"Experience in Teaching"' 
-                          fluid multiple selection
-                        //   value = {experience}
-                          className={this.handleInputError(errors,'teachingField')} 
-                           options={experienceOptions} />
-                            <br/>
-                        </>
-                          }
+                            <Dropdown placeholder='Skills' 
+                            fluid multiple selection 
+                            options={skillsOptions} />
+                                <br/>
+                            <Dropdown 
+                            placeholder='"Experience in Teaching"' 
+                            fluid multiple selection
+                              value = {experience}
+                              className={this.handleInputError(errors,'teachingField')} 
+                            options={experienceOptions} />
+                                <br/>
+                            </>
+                            }
                         <Button
                             disabled={loading}
                             className={loading ? 'loading' : ''}
