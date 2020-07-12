@@ -77,10 +77,7 @@ export default class Register extends Component {
 
     displayErrors = errors => errors.map((error,i) =><p key={i} >{error.message} </p> )
 
-<<<<<<< HEAD
     users = () => this.firebase.auth.ref('users');
-=======
->>>>>>> ac282eb6f8062ce3d657560b8195a11c02c55867
 
     handleSubmit = (e) =>{
         e.preventDefault();
@@ -90,18 +87,10 @@ export default class Register extends Component {
         .auth()
         .createUserWithEmailAndPassword(this.state.email,this.state.password)
         .then(createdUser => {
-<<<<<<< HEAD
-=======
-            console.log(createdUser.user.uid);
->>>>>>> ac282eb6f8062ce3d657560b8195a11c02c55867
             createdUser.user.updateProfile({
                 displayName: this.state.username,
                 photoURL:`http://gravatar.com/avatar/${md5(createdUser.user.email)}?d=identicon`
                 
-<<<<<<< HEAD
-
-=======
->>>>>>> ac282eb6f8062ce3d657560b8195a11c02c55867
             })
             .then(() =>{
                 this.setState({loading:false})
@@ -111,16 +100,12 @@ export default class Register extends Component {
                     console.log('User Saved');
                     console.log('')
                 })
-<<<<<<< HEAD
             }).then(()=>{
                 firebase.database().ref('users/').once('value', function (snapshot) {
                     console.log(snapshot.val())
                 });
             })
             .catch(err => {
-=======
-            }).catch(err => {
->>>>>>> ac282eb6f8062ce3d657560b8195a11c02c55867
                 console.error(err);
                 this.setState({ errors: this.state.errors.concat(err) , loading:false })
             })
@@ -140,11 +125,7 @@ export default class Register extends Component {
         return this.state.usersRef.child(createdUser.user.uid).set({
             name: createdUser.user.displayName ,
             avatar: createdUser.user.photoURL,
-<<<<<<< HEAD
             roles :  this.state.showTeachearForm ? 'teachear' : 'student',
-=======
-            roles :  ['student'],
->>>>>>> ac282eb6f8062ce3d657560b8195a11c02c55867
             skills : 'skills',
             teachingExperience : 'teaching'
            
