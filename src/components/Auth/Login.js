@@ -32,8 +32,18 @@ import {setUser} from '../../actions'
             .then(signedInUser => {
                 this.props.setUser(signedInUser)
                 console.log(signedInUser);
-                this.props.history.push('/userDashboard');
-                console.log("Login -> handleSubmit -> this.props", this.props)
+                console.log("Login -> handleSubmit -> signedInUser", signedInUser.user.uid)
+                
+                firebase.database().ref(`users/${signedInUser.user.uid}`).once('value',  (snapshot) => {
+                    const value = snapshot.val()
+                    console.log("Login -> handleSubmit -> value", value)
+                    if(value.roles.includes('student')){
+                        this.props.history.push('/userDashboard');
+                    }else{
+                        this.props.history.push('/teacherDashboard');
+                    }
+                    
+                })
             })
             .catch(err =>{
                 console.error(err)
