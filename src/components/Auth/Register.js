@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Grid, Form, Segment,Button,Header,Message,Icon ,Checkbox, Dropdown } from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 import firebase from '../../firebase';
+import TeacherInfo from './TeacherInfo'
 import md5 from 'md5';
 
 const skillsOptions = [
@@ -25,7 +26,6 @@ export default class Register extends Component {
         password:'',
         passwordConfirmation:'',
         schoolName:'',
-        level:'',
         teachingField:'',
         experience:'',
         showTeachearForm: false,
@@ -77,6 +77,8 @@ export default class Register extends Component {
 
     displayErrors = errors => errors.map((error,i) =><p key={i} >{error.message} </p> )
 
+    users = () => this.firebase.auth.ref('users');
+
     handleSubmit = (e) =>{
         e.preventDefault();
         if(this.isFormValid()){
@@ -84,12 +86,12 @@ export default class Register extends Component {
         firebase
         .auth()
         .createUserWithEmailAndPassword(this.state.email,this.state.password)
-        .then(createdUser =>{
-            console.log(createdUser);
+        .then(createdUser => {
             createdUser.user.updateProfile({
-                displayName: this.state.showTeachearForm ? 'teachear' : 'student',
-                photoURL:`http://gravatar.com/avatar/${md5(createdUser.user.email)}?d=identicon`,
-                userType:this.state.username
+                displayName: this.state.username,
+                photoURL:`http://gravatar.com/avatar/${md5(createdUser.user.email)}?d=identicon`
+                
+
             })
             .then(() =>{
                 this.setState({loading:false})
@@ -99,6 +101,10 @@ export default class Register extends Component {
                     console.log('User Saved');
                     console.log('')
                 })
+            }).then(()=>{
+                firebase.database().ref('users/').once('value', function (snapshot) {
+                    console.log(snapshot.val())
+                });
             })
             .catch(err => {
                 console.error(err);
@@ -115,9 +121,18 @@ export default class Register extends Component {
         return this.state.usersRef.child(createdUser.user.uid).set({
             name: createdUser.user.displayName ,
             avatar: createdUser.user.photoURL,
+            roles :  this.state.showTeachearForm ? 'teachear' : 'student',
+            skills : 'skills',
+            teachingExperience : 'teaching'
            
         })
     }
+
+    // readUserData() {
+    //     firebase.database().ref('users/').once('value', function (snapshot) {
+    //         console.log(snapshot.val())
+    //     });
+    // }
 
     handleInputError = ( errors , inputName ) =>{
        return errors.some(error => 
@@ -166,24 +181,25 @@ export default class Register extends Component {
                          />
                           {this.state.showTeachearForm && 
                           <>
-                          <Form.Input fluid name="text" icon="globe" iconPosition="left"
-                          placeholder="Teaching Field" value={teachingField} 
-                          className={this.handleInputError(errors,'teachingField')} 
-                          onChange={this.handleChange} type="text" />
+             
+                            <Form.Input fluid name="text" icon="globe" iconPosition="left"
+                              placeholder="Teaching Field" value={teachingField} 
+                              className={this.handleInputError(errors,'teachingField')} 
+                            onChange={this.handleChange} type="text" />
 
-                          <Dropdown placeholder='Skills' 
-                          fluid multiple selection 
-                          options={skillsOptions} />
-                            <br/>
-                         <Dropdown 
-                          placeholder='"Experience in Teaching"' 
-                          fluid multiple selection
-                        //   value = {experience}
-                          className={this.handleInputError(errors,'teachingField')} 
-                           options={experienceOptions} />
-                            <br/>
-                        </>
-                          }
+                            <Dropdown placeholder='Skills' 
+                            fluid multiple selection 
+                            options={skillsOptions} />
+                                <br/>
+                            <Dropdown 
+                            placeholder='"Experience in Teaching"' 
+                            fluid multiple selection
+                              value = {experience}
+                              className={this.handleInputError(errors,'teachingField')} 
+                            options={experienceOptions} />
+                                <br/>
+                            </>
+                            }
                         <Button
                             disabled={loading}
                             className={loading ? 'loading' : ''}

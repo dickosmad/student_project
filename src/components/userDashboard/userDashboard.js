@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import firebase from '../../firebase'
 import { Image, Menu, Icon,Dropdown,Button } from 'semantic-ui-react';
+import TeacherAdding from './TeacherAdding';
 
 
  class userDashboard extends Component {
@@ -56,7 +57,8 @@ componentWillReceiveProps(nextProps) {
           </Menu.Item>
           <Menu.Item as='a'>
             <Icon name='camera' />
-            Channels
+            <TeacherAdding user={this.props.currentUser} />
+          
           </Menu.Item>
         </Menu>
         <Menu size='small'
