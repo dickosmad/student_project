@@ -28,7 +28,7 @@ export default class Register extends Component {
         schoolName:'',
         teachingField:'',
         experience:'',
-        showTeachearForm: false,
+        showteacherForm: false,
         errors:[],
         loading:false , 
         usersRef: firebase.database().ref('users')
@@ -39,7 +39,7 @@ export default class Register extends Component {
     }
 
     toggleForm = () => {
-        this.setState({showTeachearForm: !this.state.showTeachearForm})
+        this.setState({showteacherForm: !this.state.showteacherForm})
     }
 
 
@@ -73,7 +73,7 @@ export default class Register extends Component {
             return true ;
         }
     }
-    isTeacherValid = ({showTeachearForm , experience }) => showTeachearForm && experience ; 
+    isTeacherValid = ({showteacherForm , experience }) => showteacherForm && experience ; 
 
     displayErrors = errors => errors.map((error,i) =><p key={i} >{error.message} </p> )
 
@@ -125,18 +125,13 @@ export default class Register extends Component {
         return this.state.usersRef.child(createdUser.user.uid).set({
             name: createdUser.user.displayName ,
             avatar: createdUser.user.photoURL,
-            roles :  this.state.showTeachearForm ? 'teachear' : 'student',
+            roles :  this.state.showteacherForm ? ['teacher'] : ['student'],
             skills : 'skills',
             teachingExperience : 'teaching'
            
         })
     }
 
-    // readUserData() {
-    //     firebase.database().ref('users/').once('value', function (snapshot) {
-    //         console.log(snapshot.val())
-    //     });
-    // }
 
     handleInputError = ( errors , inputName ) =>{
        return errors.some(error => 
@@ -183,7 +178,7 @@ export default class Register extends Component {
                             className={this.handleInputError(errors,'passwordConfirmation')} 
                             type="password" value={passwordConfirmation} 
                          />
-                          {this.state.showTeachearForm && 
+                          {this.state.showteacherForm && 
                           <>
              
                             <Form.Input fluid name="text" icon="globe" iconPosition="left"
